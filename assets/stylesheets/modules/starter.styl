@@ -1,0 +1,39 @@
+starter_height = 50px
+color-picker_width = 10px
+input_padding = 15px
+
+
+$reset_input
+	border 0
+	outline 0
+
+.starter
+	width 95%
+	margin 0 auto
+	height starter_height
+	background-color white
+	border-radius 5px
+	box-shadow 0 0 30px alpha(theme_main_color, .4)
+
+	&__color-picker
+		position absolute
+		display inline-block
+		size color-picker_width starter_height
+		background-color theme_main_color
+		border-radius 5px 0 0 5px
+		cursor pointer
+
+	&__input
+		@extend $reset_input
+		padding-left (color-picker_width + input_padding)
+		padding-right input_padding
+		width 85%
+		box-sizing border-box
+		border-radius 5px 0 0 5px
+
+	&__submit
+		@extend $reset_input
+		size 15% starter_height
+		color white
+		background-color theme_main_color
+		border-radius 0 5px 5px 0

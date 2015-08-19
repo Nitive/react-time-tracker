@@ -31,6 +31,7 @@
     "nib": "^1.1.0",
     "normalize-styl": "^3.0.3",
     "path": "^0.11.14",
+    "randomcolor": "^0.4.0",
     "react": "^0.13.3",
     "react-dropzone": "^1.2.4",
     "vinyl-source-stream": "^1.1.0",
