@@ -35,6 +35,7 @@ Timer = React.createClass
 
 	stopTimer: ->
 		# TODO: stop timer
+		do @props.stopTimer
 
 	restartTimer: ->
 		# TODO: restart timer
@@ -85,7 +86,7 @@ Timer = React.createClass
 			</span>
 			<span className='timer__data'>
 				<span className='timer__period'>{@state.time}</span>
-				<span className='timer__time'>{@props.timer.startTime} - {@props.timer.stopTime or 'сейчас'}</span>
+				<span className='timer__time'>{@props.timer.startTime} - {@props.timer.stopTime or Date.now()}</span>
 			</span>
 			{
 				if @props.timer.played
@@ -117,6 +118,7 @@ TimersList = React.createClass
 						key=timer.id
 						timer=timer
 						timers=@props.timers
+						stopTimer=@props.stopTimer
 					/>
 			}
 		</ul>

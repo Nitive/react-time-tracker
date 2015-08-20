@@ -52,6 +52,13 @@ App = React.createClass
 		@setState timers: newTimers
 
 
+	stopTimer: ->
+		newTimers = React.addons.update @state.timers, {}
+		newTimers[0].played = no
+		newTimers[0].stopTime = Date.now()
+		@setState timers: newTimers
+
+
 	getInitialState: ->
 		data = JSON.parse localStorage.state or '{}'
 		data ||= {}
@@ -69,7 +76,10 @@ App = React.createClass
 			<Starter
 				addTimer=@addTimer
 			/>
-			<TimersList timers=@state.timers />
+			<TimersList
+				timers=@state.timers
+				stopTimer=@stopTimer
+				/>
 		</div>
 
 
