@@ -1,6 +1,7 @@
 'use strict'
 React = require 'react/addons'
 randomColor = require 'randomcolor'
+JsonCircular = require 'json-circular'
 
 Starter = require './starter.coffee'
 TimersList = require './timers-list.coffee'
@@ -17,6 +18,7 @@ App = React.createClass
 				name: name
 				color: color
 				rate: rate or 0
+				timers: []
 			newTasks = {}
 			newTasks[name] = task
 			newTasks = React.addons.update @state.tasks, $merge: newTasks
@@ -26,7 +28,13 @@ App = React.createClass
 
 
 	getTaskTime: (task) ->
-		console.log 'getTaskTime'
+		unless @state.tasks[task]
+			return -1
+
+		time = 0
+		for timer in @state.tasks[task].timers
+			time += (timer.stopTime or Date.now()) - timer.startTime
+		time
 
 
 	getTaskMoney: (task) ->
@@ -42,32 +50,38 @@ App = React.createClass
 			played: yes
 			startTime: Date.now()
 
-		newTimers = []
-		newTimers.push timer
-		for t in @state.timers
-			newTimers.push React.addons.update t,
-				played: $set: no
-				stopTime: $set: Date.now()
+		# изменяю @state.timers, чтобы не потерять ссылки на таймеры в @state.tasks
+		timers = @state.timers
+		for t in timers
+			t.played = no
+			t.stopTime ||= Date.now()
 
-		@setState timers: newTimers
+		timers.unshift timer
+		task.timers.push timer
+		@setState timers: timers
 
 
 	stopTimer: ->
-		newTimers = React.addons.update @state.timers, {}
-		newTimers[0].played = no
-		newTimers[0].stopTime = Date.now()
-		@setState timers: newTimers
+		# изменяю @state.timers, чтобы не потерять ссылки на таймеры в @state.tasks
+		timers = @state.timers
+		timers[0].played = no
+		timers[0].stopTime = Date.now()
+		@setState timers: timers
+
+
+	tickTimer: ->
+		@setState timers: @state.timers
 
 
 	getInitialState: ->
-		data = JSON.parse localStorage.state or '{}'
+		data = JsonCircular.parse localStorage.state or '{}'
 		data ||= {}
 		timers: data.timers or []
 		tasks: data.tasks or {}
 
 
 	componentDidUpdate: ->
-		localStorage.state = JSON.stringify @state
+		localStorage.state = JsonCircular.stringify @state
 
 
 	render: ->
@@ -79,6 +93,8 @@ App = React.createClass
 			<TimersList
 				timers=@state.timers
 				stopTimer=@stopTimer
+				getTaskTime=@getTaskTime
+				tick=@tickTimer
 				/>
 		</div>
 

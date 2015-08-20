@@ -12,7 +12,6 @@ Timer = React.createClass
 		taskName: @props.timer.task.name
 		taskRate: @props.timer.task.rate
 		editing: no
-		time: Date.now() - @props.timer.startTime
 
 
 	startEditing: ->
@@ -48,7 +47,7 @@ Timer = React.createClass
 	tick: ->
 		if @props.timer.stopTime
 			return clearInterval @timer
-		@setState time: Date.now() - @props.timer.startTime
+		do @props.tick
 
 
 	componentWillUnmount: ->
@@ -81,12 +80,18 @@ Timer = React.createClass
 			<span className='timer__rate'>{@state.taskRate}</span>
 			{do @generateTaskNode}
 			<span className='timer__task-info'>
-				<span className='timer__task-time'>20 ч 25 мин</span>
+				<span className='timer__task-time'>
+					{@props.getTaskTime @props.timer.task.name}
+				</span>
 				<span className='timer__task-money'>11 275 ₽</span>
 			</span>
 			<span className='timer__data'>
-				<span className='timer__period'>{@state.time}</span>
-				<span className='timer__time'>{@props.timer.startTime} - {@props.timer.stopTime or Date.now()}</span>
+				<span className='timer__period'>
+					{(@props.timer.stopTime or Date.now()) - @props.timer.startTime}
+				</span>
+				<span className='timer__time'>
+					{@props.timer.startTime} - {@props.timer.stopTime or Date.now()}
+				</span>
 			</span>
 			{
 				if @props.timer.played
@@ -119,6 +124,8 @@ TimersList = React.createClass
 						timer=timer
 						timers=@props.timers
 						stopTimer=@props.stopTimer
+						getTaskTime=@props.getTaskTime
+						tick=@props.tick
 					/>
 			}
 		</ul>
