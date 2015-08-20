@@ -9,8 +9,8 @@ Timer = React.createClass
 		@timer = setInterval @tick, 50
 
 		color: @props.timer.task.color
-		taskName: @props.timer.task.name
-		taskRate: @props.timer.task.rate
+		name: @props.timer.task.name
+		rate: @props.timer.task.rate
 		editing: no
 
 
@@ -24,7 +24,7 @@ Timer = React.createClass
 
 	onChangeTaskName: (e) ->
 		# TODO: update task in app.state.tasks
-		@setState taskName: e.target.value
+		@setState name: e.target.value
 
 
 	changeColor: ->
@@ -37,6 +37,7 @@ Timer = React.createClass
 		do @props.stopTimer
 
 	restartTimer: ->
+		@props.addTimer @state.name, @state.color, @state.rate
 		# TODO: restart timer
 
 
@@ -59,7 +60,7 @@ Timer = React.createClass
 			<input
 				className='timer__task'
 				onBlur=@finishEditing
-				value=@state.taskName
+				value=@state.name
 				onChange=@onChangeTaskName
 				autoFocus
 			/>
@@ -67,7 +68,7 @@ Timer = React.createClass
 			<span
 				className='timer__task'
 				onClick=@startEditing
-			>{@state.taskName}</span>
+			>{@state.name}</span>
 
 
 	render: ->
@@ -77,7 +78,7 @@ Timer = React.createClass
 				style={backgroundColor: @state.color}
 				onClick=@changeColor
 			/>
-			<span className='timer__rate'>{@state.taskRate}</span>
+			<span className='timer__rate'>{@state.rate}</span>
 			{do @generateTaskNode}
 			<span className='timer__task-info'>
 				<span className='timer__task-time'>
@@ -126,6 +127,7 @@ TimersList = React.createClass
 						stopTimer=@props.stopTimer
 						getTaskTime=@props.getTaskTime
 						tick=@props.tick
+						addTimer=@props.addTimer
 					/>
 			}
 		</ul>

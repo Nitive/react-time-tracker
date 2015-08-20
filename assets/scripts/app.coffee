@@ -95,6 +95,7 @@ App = React.createClass
 				stopTimer=@stopTimer
 				getTaskTime=@getTaskTime
 				tick=@tickTimer
+				addTimer=@addTimer
 				/>
 		</div>
 
