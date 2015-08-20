@@ -43,7 +43,7 @@ Timer = React.createClass
 
 
 	destroyTimer: ->
-		# TODO: destroy timer, update app.state.timers and app.state.tasks
+		@props.destroyTimer @props.timer
 
 
 	tick: ->
@@ -131,6 +131,7 @@ TimersList = React.createClass
 						addTimer=@props.addTimer
 						changeTimerName=@props.changeTimerName
 						getTaskColor=@props.getTaskColor
+						destroyTimer=@props.destroyTimer
 					/>
 			}
 		</ul>

@@ -94,6 +94,11 @@ App = React.createClass
 		@setState tasks: newTasks
 
 
+	destroyTimer: (timer) ->
+		timers = @state.timers.filter (item) -> item.id isnt timer.id
+		@setState timers: timers
+
+
 	componentDidUpdate: ->
 		localStorage.state = JsonCircular.stringify @state
 
@@ -113,6 +118,7 @@ App = React.createClass
 				addTimer=@addTimer
 				changeTimerName=@changeTimerName
 				getTaskColor=@getTaskColor
+				destroyTimer=@destroyTimer
 				/>
 		</div>
 
