@@ -34,9 +34,8 @@ control_btns_size = 15px
 
 	&__task
 		padding 0 25px
+		width calc(100% - 350px)
 		line-height (timer_height - 5)
-
-		// input
 		outline 0
 		border 0
 		border-top-left-radius 5px
@@ -84,19 +83,21 @@ control_btns_size = 15px
 
 	&__play-btn,
 	&__stop-btn
-		absolute top ((timer_height - control_btns_size) / 2)
+		position absolute
 		display inline-block
 		vertical-align middle
 		cursor pointer
 
 
 	&__play-btn
+		top ((timer_height - control_btns_size) / 2 - 2)
 		right 5px
 		border (.65 * control_btns_size) solid transparent
 		border-left (1 * control_btns_size) solid theme_main_color
 
 
 	&__stop-btn
+		top ((timer_height - control_btns_size) / 2)
 		right 14px
 		size control_btns_size
 		background-color theme_red_color

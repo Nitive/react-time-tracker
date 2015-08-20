@@ -15,14 +15,6 @@ Timer = React.createClass
 		editing: no
 
 
-	startEditing: ->
-		@setState editing: yes
-
-
-	finishEditing: (e) ->
-		@setState editing: no
-
-
 	onChangeTaskName: (e) ->
 		@setState
 			name: e.target.value
@@ -56,23 +48,10 @@ Timer = React.createClass
 		clearInterval @timer
 
 
-	generateTaskNode: ->
-		if @state.editing
-			<input
-				className='timer__task'
-				onBlur=@finishEditing
-				value=@state.name
-				onChange=@onChangeTaskName
-				autoFocus
-			/>
-		else
-			<span
-				className='timer__task'
-				onClick=@startEditing
-			>{@state.name}</span>
-
-
 	render: ->
+		timerDuration = (@props.timer.stopTime or Date.now()) - @props.timer.startTime
+		taskDuration = @props.getTaskTime @props.timer.task.name
+
 		<li className='timer'>
 			<div
 				className='color-picker timer__color-picker'
@@ -80,20 +59,30 @@ Timer = React.createClass
 				onClick=@changeColor
 			/>
 			<span className='timer__rate'>{@state.rate}</span>
-			{do @generateTaskNode}
+
+			<input
+				className='timer__task'
+				onBlur=@finishEditing
+				value=@state.name
+				onChange=@onChangeTaskName
+				autoFocus
+			/>
+
 			<span className='timer__task-info'>
 				<span className='timer__task-time'>
-					{format.duration @props.getTaskTime @props.timer.task.name}
+					{format.duration taskDuration}
 				</span>
-				<span className='timer__task-money'>11 275 ₽</span>
+				<span className='timer__task-money'>{Math.floor @state.rate * taskDuration / (1000 * 60 * 60)} ₽</span>
 			</span>
+
 			<span className='timer__data'>
 				<span className='timer__period'>
-					{format.duration (@props.timer.stopTime or Date.now()) - @props.timer.startTime}
+					{format.duration timerDuration}
 				</span>
 				<span className='timer__time'>
 					{format.time @props.timer.startTime} - {format.time @props.timer.stopTime or Date.now()}
 				</span>
+
 			</span>
 			{
 				if @props.timer.played
