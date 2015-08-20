@@ -1,0 +1,28 @@
+undo_panel_height = 50px
+
+
+.undo-panel
+	fixed bottom 50px left 50%
+	margin-left -300px
+	width (@margin-left * -2)
+	height 50px
+	background-color white
+	border-radius 5px
+	box-shadow theme_li_shadow
+
+	&__text
+		padding-left 20px
+		display inline-block
+		size 85%
+		box-sizing border-box
+
+
+	&__submit
+		height undo_panel_height
+		color white
+		background-color theme_main_color
+		border-radius 0 5px 5px 0
+		border 0
+		outline 0
+		box-sizing border-box
+

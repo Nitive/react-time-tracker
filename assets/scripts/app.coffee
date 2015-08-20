@@ -5,6 +5,7 @@ JsonCircular = require 'json-circular'
 
 Starter = require './starter.coffee'
 TimersList = require './timers-list.coffee'
+UndoPanel = require './undo-panel.coffee'
 
 
 App = React.createClass
@@ -18,14 +19,14 @@ App = React.createClass
 
 	setTask: (name, color, rate) ->
 		newTasks = React.addons.update @state.tasks, {}
-		if rate
+		if typeof rate is 'number'
 			newTasks[name].rate = rate
 		if color
 			newTasks[name].color = color
 		@setState tasks: newTasks
 		@state.tasks[name]
 
-	# Добавить задачу, если её еще нет
+
 	addTask: (name, color, rate) ->
 		task = null
 
@@ -59,6 +60,7 @@ App = React.createClass
 			return -1
 
 		@state.tasks[taskName].rate
+
 
 	getTaskColor: (taskName) ->
 		color = randomColor luminosity: 'light'
@@ -108,7 +110,17 @@ App = React.createClass
 
 	destroyTimer: (timer) ->
 		timers = @state.timers.filter (item) -> item.id isnt timer.id
-		@setState timers: timers
+		@setState
+			timers: timers
+			undo: @state
+			undoMessage: "Удалено \"#{timer.task.name}\""
+
+
+	restoreTimer: ->
+		@setState
+			timers: @state.undo.timers
+			tasks: @state.undo.tasks
+			undo: no
 
 
 	componentDidUpdate: ->
@@ -134,7 +146,14 @@ App = React.createClass
 				getTaskColor=@getTaskColor
 				destroyTimer=@destroyTimer
 				getTaskRate=@getTaskRate
-				/>
+			/>
+			{
+				if @state.undo
+					<UndoPanel
+						restoreTimer=@restoreTimer
+						undoMessage=@state.undoMessage
+					/>
+			}
 		</div>
 
 
