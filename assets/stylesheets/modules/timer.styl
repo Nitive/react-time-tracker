@@ -1,0 +1,115 @@
+timer_height = 50px
+control_btns_size = 15px
+
+
+
+.timers-list
+	margin 53px auto 100px
+	padding-left 0
+	width 90%
+	list-style-type none
+
+
+.timer
+	position relative
+	margin-top 10px
+	height timer_height
+	background-color #f3f6f8
+	border-radius 5px
+	box-shadow theme_li_shadow
+
+
+	&__color-picker
+		size color-picker_width timer_height
+
+
+	&__rate
+		absolute bottom 3px left 35px
+		font-size .6em
+		font-weight bolder
+		color theme_gray_color
+		&::after
+			content ' ₽/ч'
+
+
+	&__task
+		padding 0 25px
+		line-height (timer_height - 5)
+
+		// input
+		outline 0
+		border 0
+		border-top-left-radius 5px
+		border-bottom-left-radius 5px
+		background-color transparent
+
+
+	&__task-info
+		absolute right 170px
+		margin-top ((timer_height - 35) / 2)
+		display inline-table
+		font-size .8em
+		font-weight bolder
+		vertical-align middle
+		&:before
+			content 'Итого:'
+			absolute top 8px left -50px
+			color theme_dark_gray_color
+
+
+
+	&__task-time,
+	&__task-money,
+	&__period,
+	&__time
+		display table-row
+		text-align center
+
+
+	&__data
+		absolute right 50px
+		margin-top ((timer_height - 33) / 2)
+		display inline-table
+		font-weight bolder
+
+	&__period
+		font-size 14px
+
+
+	&__time
+		font-size 10px
+		font-weight bolder
+		color theme_gray_color
+
+
+	&__play-btn,
+	&__stop-btn
+		absolute top ((timer_height - control_btns_size) / 2)
+		display inline-block
+		vertical-align middle
+		cursor pointer
+
+
+	&__play-btn
+		right 5px
+		border (.65 * control_btns_size) solid transparent
+		border-left (1 * control_btns_size) solid theme_main_color
+
+
+	&__stop-btn
+		right 14px
+		size control_btns_size
+		background-color theme_red_color
+
+
+	&__delete-btn
+		absolute top -3px right 1px
+		font-family 'Times New Roman'
+		color theme_red_color
+		cursor pointer
+		opacity 0
+		transition opacity animation_fast
+
+
+	&:hover &__delete-btn
+		opacity 1

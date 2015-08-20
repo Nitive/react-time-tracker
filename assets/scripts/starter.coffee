@@ -28,7 +28,7 @@ Starter = React.createClass
 		<div className='starter'>
 			<div
 				style={backgroundColor: @state.color}
-				className='starter__color-picker'
+				className='color-picker starter__color-picker'
 				onClick=@changeColor
 			/>
 			<form onSubmit=@addTimer>

@@ -45,12 +45,14 @@ App = React.createClass
 	addTimer: (taskName, taskColor) ->
 		task = @addTask taskName, taskColor
 
-		timer = task: task
+		timer =
+			id: do Math.random
+			task: task
 		@startTimer timer
 		for t in @state.timers
 			@stopTimer t
 
-		@setState timers: React.addons.update @state.timers, $push: [timer]
+		@setState timers: React.addons.update @state.timers, $unshift: [timer]
 
 
 	getInitialState: ->
