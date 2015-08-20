@@ -1,8 +1,6 @@
 'use strict'
 React = require 'react/addons'
 randomColor = require 'randomcolor'
-JsonCircular = require 'json-circular'
-
 Starter = require './starter.coffee'
 TimersList = require './timers-list.coffee'
 UndoPanel = require './undo-panel.coffee'
@@ -11,7 +9,7 @@ UndoPanel = require './undo-panel.coffee'
 App = React.createClass
 
 	getInitialState: ->
-		data = JsonCircular.parse localStorage.state or '{}'
+		data = JSON.parse localStorage.state or '{}'
 		data ||= {}
 		timers: data.timers or []
 		tasks: data.tasks or {}
@@ -124,7 +122,7 @@ App = React.createClass
 
 
 	componentDidUpdate: ->
-		localStorage.state = JsonCircular.stringify @state
+		localStorage.state = JSON.stringify @state
 
 
 	render: ->
