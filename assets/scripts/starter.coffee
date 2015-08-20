@@ -14,6 +14,10 @@ Starter = React.createClass
 		@changeColor e
 
 
+	onChangeRate: (e) ->
+		@setState rate: Number e.target.value.replace /\D+/g, ''
+
+
 	changeColor: (e) ->
 		@setState color: @props.getTaskColor e.target.value
 
@@ -44,6 +48,9 @@ Starter = React.createClass
 					type='submit'
 				/>
 			</form>
+			<div className='starter__rate'>
+				Ставка: <input onChange=@onChangeRate value=@state.rate /> ₽/ч
+			</div>
 		</div>
 
 
