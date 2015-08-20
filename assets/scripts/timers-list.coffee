@@ -24,7 +24,9 @@ Timer = React.createClass
 
 
 	onChangeTaskName: (e) ->
-		@setState name: e.target.value
+		@setState
+			name: e.target.value
+			color: @props.getTaskColor e.target.value
 		@props.changeTimerName @state.name, e.target.value, @state.rate, @props.timer
 
 
@@ -128,6 +130,7 @@ TimersList = React.createClass
 						tick=@props.tick
 						addTimer=@props.addTimer
 						changeTimerName=@props.changeTimerName
+						getTaskColor=@props.getTaskColor
 					/>
 			}
 		</ul>

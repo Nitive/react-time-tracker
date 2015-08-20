@@ -25,7 +25,6 @@ App = React.createClass
 				name: name
 				color: color
 				rate: rate or 0
-				timers: []
 			newTasks = {}
 			newTasks[name] = task
 			newTasks = React.addons.update @state.tasks, $merge: newTasks
@@ -49,6 +48,11 @@ App = React.createClass
 		console.log 'getTaskMoney'
 
 
+	getTaskColor: (taskName) ->
+		color = randomColor luminosity: 'light'
+		(@state.tasks[taskName] or color: color).color
+
+
 	addTimer: (taskName, taskColor, taskRate) ->
 		task = @addTask taskName, taskColor, taskRate
 
@@ -58,8 +62,7 @@ App = React.createClass
 			played: yes
 			startTime: Date.now()
 
-		# изменяю @state.timers, чтобы не потерять ссылки на таймеры в @state.tasks
-		timers = @state.timers
+		timers = React.addons.update @state.timers, {}
 		for t in timers
 			t.played = no
 			t.stopTime ||= Date.now()
@@ -69,8 +72,7 @@ App = React.createClass
 
 
 	stopTimer: ->
-		# изменяю @state.timers, чтобы не потерять ссылки на таймеры в @state.tasks
-		timers = @state.timers
+		timers = React.addons.update @state.timers, {}
 		timers[0].played = no
 		timers[0].stopTime = Date.now()
 		@setState timers: timers
@@ -82,9 +84,9 @@ App = React.createClass
 
 	changeTimerName: (oldTaskName, newTaskName, taskRate, timer) ->
 		task = React.addons.update @state.tasks[oldTaskName], {}
-		timer.task = task
-
 		task.name = newTaskName
+		task.color = @getTaskColor newTaskName
+		timer.task = task
 
 		newTasks = {}
 		newTasks[newTaskName] = task
@@ -101,6 +103,7 @@ App = React.createClass
 			<header className='header'>React Time Tracker</header>
 			<Starter
 				addTimer=@addTimer
+				getTaskColor=@getTaskColor
 			/>
 			<TimersList
 				timers=@state.timers
@@ -109,6 +112,7 @@ App = React.createClass
 				tick=@tickTimer
 				addTimer=@addTimer
 				changeTimerName=@changeTimerName
+				getTaskColor=@getTaskColor
 				/>
 		</div>
 

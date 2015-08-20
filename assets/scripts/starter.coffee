@@ -11,11 +11,11 @@ Starter = React.createClass
 
 	onChange: (e) ->
 		@setState value: e.target.value
-		# do @changeColor
+		@changeColor e
 
 
-	changeColor: ->
-		@setState color: randomColor luminosity: 'light'
+	changeColor: (e) ->
+		@setState color: @props.getTaskColor e.target.value
 
 
 	addTimer: (e) ->
