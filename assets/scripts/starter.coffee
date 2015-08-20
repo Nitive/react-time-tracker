@@ -6,6 +6,7 @@ Starter = React.createClass
 	getInitialState: ->
 		value: ''
 		color: randomColor luminosity: 'light'
+		rate: 0
 
 
 	onChange: (e) ->
@@ -19,7 +20,7 @@ Starter = React.createClass
 
 	addTimer: (e) ->
 		do e.preventDefault
-		@props.addTimer @state.value, @state.color
+		@props.addTimer @state.value, @state.color, @state.rate
 		@setState value: ''
 		do @changeColor
 

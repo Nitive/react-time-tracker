@@ -6,9 +6,13 @@ randomColor = require 'randomcolor'
 Timer = React.createClass
 
 	getInitialState: ->
+		@timer = setInterval @tick, 50
+
 		color: @props.timer.task.color
 		taskName: @props.timer.task.name
+		taskRate: @props.timer.task.rate
 		editing: no
+		time: Date.now() - @props.timer.startTime
 
 
 	startEditing: ->
@@ -29,11 +33,25 @@ Timer = React.createClass
 		@setState color: randomColor luminosity: 'light'
 
 
-	togglePlayed: ->
-		# TODO: toggle played state and update app.state.timers
+	stopTimer: ->
+		# TODO: stop timer
+
+	restartTimer: ->
+		# TODO: restart timer
+
 
 	destroyTimer: ->
 		# TODO: destroy timer, update app.state.timers and app.state.tasks
+
+
+	tick: ->
+		if @props.timer.stopTime
+			return clearInterval @timer
+		@setState time: Date.now() - @props.timer.startTime
+
+
+	componentWillUnmount: ->
+		clearInterval @timer
 
 
 	generateTaskNode: ->
@@ -59,20 +77,28 @@ Timer = React.createClass
 				style={backgroundColor: @state.color}
 				onClick=@changeColor
 			/>
-			<span className='timer__rate'>500</span>
+			<span className='timer__rate'>{@state.taskRate}</span>
 			{do @generateTaskNode}
 			<span className='timer__task-info'>
 				<span className='timer__task-time'>20 ч 25 мин</span>
 				<span className='timer__task-money'>11 275 ₽</span>
 			</span>
 			<span className='timer__data'>
-				<span className='timer__period'>5 ч 37 мин</span>
-				<span className='timer__time'>14:29:11 - 14:39:53</span>
+				<span className='timer__period'>{@state.time}</span>
+				<span className='timer__time'>{@props.timer.startTime} - {@props.timer.stopTime or 'сейчас'}</span>
 			</span>
-			<div
-				className={if @props.timer.played then 'timer__play-btn' else 'timer__stop-btn'}
-				onClick=@togglePlayed
-			/>
+			{
+				if @props.timer.played
+					<div
+						className='timer__stop-btn'
+						onClick=@stopTimer
+					/>
+				else
+					<div
+						className='timer__play-btn'
+						onClick=@restartTimer
+					/>
+			}
 			<div
 				className='timer__delete-btn'
 				onClick=@destroyTimer

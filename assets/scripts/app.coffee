@@ -9,13 +9,14 @@ TimersList = require './timers-list.coffee'
 App = React.createClass
 
 	# Добавить задачу, если её еще нет
-	addTask: (name, color) ->
+	addTask: (name, color, rate) ->
 		task = null
 
 		unless @state.tasks[name]
 			task =
 				name: name
 				color: color
+				rate: rate or 0
 			newTasks = {}
 			newTasks[name] = task
 			newTasks = React.addons.update @state.tasks, $merge: newTasks
@@ -32,27 +33,23 @@ App = React.createClass
 		console.log 'getTaskMoney'
 
 
-	startTimer: (timer) ->
-		timer.played = yes
-		timer.startTime = Date.now()
-
-
-	stopTimer: (timer) ->
-		timer.played = no
-		timer.stopTime = Date.now()
-
-
-	addTimer: (taskName, taskColor) ->
-		task = @addTask taskName, taskColor
+	addTimer: (taskName, taskColor, taskRate) ->
+		task = @addTask taskName, taskColor, taskRate
 
 		timer =
 			id: do Math.random
 			task: task
-		@startTimer timer
-		for t in @state.timers
-			@stopTimer t
+			played: yes
+			startTime: Date.now()
 
-		@setState timers: React.addons.update @state.timers, $unshift: [timer]
+		newTimers = []
+		newTimers.push timer
+		for t in @state.timers
+			newTimers.push React.addons.update t,
+				played: $set: no
+				stopTime: $set: Date.now()
+
+		@setState timers: newTimers
 
 
 	getInitialState: ->
