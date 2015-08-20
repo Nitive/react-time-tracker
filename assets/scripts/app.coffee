@@ -16,6 +16,15 @@ App = React.createClass
 		tasks: data.tasks or {}
 
 
+	setTask: (name, color, rate) ->
+		newTasks = React.addons.update @state.tasks, {}
+		if rate
+			newTasks[name].rate = rate
+		if color
+			newTasks[name].color = color
+		@setState tasks: newTasks
+		@state.tasks[name]
+
 	# Добавить задачу, если её еще нет
 	addTask: (name, color, rate) ->
 		task = null
@@ -29,24 +38,27 @@ App = React.createClass
 			newTasks[name] = task
 			newTasks = React.addons.update @state.tasks, $merge: newTasks
 			@setState tasks: newTasks
+			return task
 
-		task or @state.tasks[name]
+		@setTask name, color, rate
 
 
-	getTaskTime: (task) ->
-		unless @state.tasks[task]
+	getTaskTime: (taskName) ->
+		unless @state.tasks[taskName]
 			return -1
 
 		time = 0
 		for timer in @state.timers
-			if timer.task.name is task
+			if timer.task.name is taskName
 				time += (timer.stopTime or Date.now()) - timer.startTime
 		time
 
 
-	getTaskMoney: (task) ->
-		console.log 'getTaskMoney'
+	getTaskRate: (taskName) ->
+		unless @state.tasks[taskName]
+			return -1
 
+		@state.tasks[taskName].rate
 
 	getTaskColor: (taskName) ->
 		color = randomColor luminosity: 'light'
@@ -109,6 +121,7 @@ App = React.createClass
 			<Starter
 				addTimer=@addTimer
 				getTaskColor=@getTaskColor
+				getTaskRate=@getTaskRate
 			/>
 			<TimersList
 				timers=@state.timers
@@ -116,9 +129,11 @@ App = React.createClass
 				getTaskTime=@getTaskTime
 				tick=@tickTimer
 				addTimer=@addTimer
+				setTask=@setTask
 				changeTimerName=@changeTimerName
 				getTaskColor=@getTaskColor
 				destroyTimer=@destroyTimer
+				getTaskRate=@getTaskRate
 				/>
 		</div>
 

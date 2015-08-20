@@ -8,8 +8,6 @@ Timer = React.createClass
 
 	getInitialState: ->
 		@timer = setInterval @tick, 50
-
-		color: @props.timer.task.color
 		name: @props.timer.task.name
 		rate: @props.timer.task.rate
 		editing: no
@@ -19,19 +17,23 @@ Timer = React.createClass
 		@setState
 			name: e.target.value
 			color: @props.getTaskColor e.target.value
-		@props.changeTimerName @state.name, e.target.value, @state.rate, @props.timer
+		@props.changeTimerName @state.name, e.target.value, @props.getTaskRate(@state.name), @props.timer
 
 
 	changeColor: ->
-		# TODO: update task in app.state.tasks
-		@setState color: randomColor luminosity: 'light'
+		@props.setTask @state.name, randomColor luminosity: 'light'
+
+
+	onChangeTaskRate: (e) ->
+		@props.setTask @state.name, null, Number e.target.value.replace /\D+/g, ''
 
 
 	stopTimer: ->
 		do @props.stopTimer
 
+
 	restartTimer: ->
-		@props.addTimer @state.name, @state.color, @state.rate
+		@props.addTimer @state.name, @props.getTaskColor @state.name, @props.getTaskRate @state.name
 
 
 	destroyTimer: ->
@@ -50,29 +52,35 @@ Timer = React.createClass
 
 	render: ->
 		timerDuration = (@props.timer.stopTime or Date.now()) - @props.timer.startTime
-		taskDuration = @props.getTaskTime @props.timer.task.name
+		taskDuration = @props.getTaskTime @state.name
 
 		<li className='timer'>
 			<div
 				className='color-picker timer__color-picker'
-				style={backgroundColor: @state.color}
+				style={backgroundColor: @props.getTaskColor @state.name}
 				onClick=@changeColor
 			/>
-			<span className='timer__rate'>{@state.rate}</span>
+			<span className='timer__rate'>
+				<input
+					value={@props.getTaskRate @state.name}
+					onChange=@onChangeTaskRate
+				/>
+			</span>
 
 			<input
 				className='timer__task'
 				onBlur=@finishEditing
 				value=@state.name
 				onChange=@onChangeTaskName
-				autoFocus
 			/>
 
 			<span className='timer__task-info'>
 				<span className='timer__task-time'>
 					{format.duration taskDuration}
 				</span>
-				<span className='timer__task-money'>{Math.floor @state.rate * taskDuration / (1000 * 60 * 60)} ₽</span>
+				<span className='timer__task-money'>
+					{Math.round @props.getTaskRate(@state.name) * taskDuration / (1000 * 60 * 60)} ₽
+					</span>
 			</span>
 
 			<span className='timer__data'>
@@ -121,6 +129,8 @@ TimersList = React.createClass
 						changeTimerName=@props.changeTimerName
 						getTaskColor=@props.getTaskColor
 						destroyTimer=@props.destroyTimer
+						getTaskRate=@props.getTaskRate
+						setTask=@props.setTask
 					/>
 			}
 		</ul>

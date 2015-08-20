@@ -24,12 +24,20 @@ control_btns_size = 15px
 
 
 	&__rate
-		absolute bottom 3px left 35px
+		absolute bottom 3px left 10px
 		font-size .6em
 		font-weight bolder
 		color theme_gray_color
-		&::after
+
+		&:after
 			content ' ₽/ч'
+
+		input
+			width 40px
+			text-align right
+			background-color transparent
+			border 0
+			outline 0
 
 
 	&__task
