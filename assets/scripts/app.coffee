@@ -9,6 +9,13 @@ TimersList = require './timers-list.coffee'
 
 App = React.createClass
 
+	getInitialState: ->
+		data = JsonCircular.parse localStorage.state or '{}'
+		data ||= {}
+		timers: data.timers or []
+		tasks: data.tasks or {}
+
+
 	# Добавить задачу, если её еще нет
 	addTask: (name, color, rate) ->
 		task = null
@@ -32,8 +39,9 @@ App = React.createClass
 			return -1
 
 		time = 0
-		for timer in @state.tasks[task].timers
-			time += (timer.stopTime or Date.now()) - timer.startTime
+		for timer in @state.timers
+			if timer.task.name is task
+				time += (timer.stopTime or Date.now()) - timer.startTime
 		time
 
 
@@ -57,7 +65,6 @@ App = React.createClass
 			t.stopTime ||= Date.now()
 
 		timers.unshift timer
-		task.timers.push timer
 		@setState timers: timers
 
 
@@ -73,11 +80,16 @@ App = React.createClass
 		@setState timers: @state.timers
 
 
-	getInitialState: ->
-		data = JsonCircular.parse localStorage.state or '{}'
-		data ||= {}
-		timers: data.timers or []
-		tasks: data.tasks or {}
+	changeTimerName: (oldTaskName, newTaskName, taskRate, timer) ->
+		task = React.addons.update @state.tasks[oldTaskName], {}
+		timer.task = task
+
+		task.name = newTaskName
+
+		newTasks = {}
+		newTasks[newTaskName] = task
+		newTasks = React.addons.update @state.tasks, $merge: newTasks
+		@setState tasks: newTasks
 
 
 	componentDidUpdate: ->
@@ -96,6 +108,7 @@ App = React.createClass
 				getTaskTime=@getTaskTime
 				tick=@tickTimer
 				addTimer=@addTimer
+				changeTimerName=@changeTimerName
 				/>
 		</div>
 

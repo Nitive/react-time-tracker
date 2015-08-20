@@ -19,13 +19,13 @@ Timer = React.createClass
 		@setState editing: yes
 
 
-	finishEditing: ->
+	finishEditing: (e) ->
 		@setState editing: no
 
 
 	onChangeTaskName: (e) ->
-		# TODO: update task in app.state.tasks
 		@setState name: e.target.value
+		@props.changeTimerName @state.name, e.target.value, @state.rate, @props.timer
 
 
 	changeColor: ->
@@ -34,12 +34,10 @@ Timer = React.createClass
 
 
 	stopTimer: ->
-		# TODO: stop timer
 		do @props.stopTimer
 
 	restartTimer: ->
 		@props.addTimer @state.name, @state.color, @state.rate
-		# TODO: restart timer
 
 
 	destroyTimer: ->
@@ -129,6 +127,7 @@ TimersList = React.createClass
 						getTaskTime=@props.getTaskTime
 						tick=@props.tick
 						addTimer=@props.addTimer
+						changeTimerName=@props.changeTimerName
 					/>
 			}
 		</ul>
