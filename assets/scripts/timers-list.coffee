@@ -79,7 +79,7 @@ Timer = React.createClass
 					{format.duration taskDuration}
 				</span>
 				<span className='timer__task-money'>
-					{Math.round @props.getTaskRate(@state.name) * taskDuration / (1000 * 60 * 60)} ₽
+					{Math.round @props.getTaskRate(@state.name) * taskDuration / (1000 * 60 * 60)} руб
 					</span>
 			</span>
 

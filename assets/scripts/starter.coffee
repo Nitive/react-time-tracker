@@ -32,7 +32,9 @@ Starter = React.createClass
 		do e.preventDefault
 		@props.addTimer @state.value, @state.color, @state.rate
 		do @changeColor
-		@setState value: ''
+		@setState
+			value: ''
+			rate: 0
 
 
 
@@ -65,7 +67,7 @@ Starter = React.createClass
 					value=@state.rate
 					tabIndex=0
 					/>
-					₽/ч
+					руб/ч
 				</div>
 			</form>
 		</div>
