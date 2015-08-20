@@ -1,5 +1,6 @@
 React = require 'react/addons'
 randomColor = require 'randomcolor'
+format = require './timeformat.coffee'
 
 
 
@@ -82,16 +83,16 @@ Timer = React.createClass
 			{do @generateTaskNode}
 			<span className='timer__task-info'>
 				<span className='timer__task-time'>
-					{@props.getTaskTime @props.timer.task.name}
+					{format.duration @props.getTaskTime @props.timer.task.name}
 				</span>
 				<span className='timer__task-money'>11 275 ₽</span>
 			</span>
 			<span className='timer__data'>
 				<span className='timer__period'>
-					{(@props.timer.stopTime or Date.now()) - @props.timer.startTime}
+					{format.duration (@props.timer.stopTime or Date.now()) - @props.timer.startTime}
 				</span>
 				<span className='timer__time'>
-					{@props.timer.startTime} - {@props.timer.stopTime or Date.now()}
+					{format.time @props.timer.startTime} - {format.time @props.timer.stopTime or Date.now()}
 				</span>
 			</span>
 			{
